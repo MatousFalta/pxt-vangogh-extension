@@ -1,7 +1,7 @@
 
 
 input.onButtonPressed(Button.A, () => {
-    vanGogh.penDown();
+    vanGogh.calib();
 })
 
 input.onButtonPressed(Button.B, () => {
