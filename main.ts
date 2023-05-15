@@ -1,7 +1,15 @@
 
 
 input.onButtonPressed(Button.A, () => {
-    vanGogh.calib();
+    vanGogh.penDown();
+    vanGogh.fd(50);
+    vanGogh.penUp();
+    vanGogh.fd(50, false);
+    vanGogh.re(180);
+    vanGogh.penDown();
+    vanGogh.fd(50);
+    vanGogh.penUp();
+    vanGogh.fd(50, false);
 })
 
 input.onButtonPressed(Button.B, () => {
