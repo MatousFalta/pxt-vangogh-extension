@@ -36,18 +36,18 @@ namespace vanGogh {
     // Kalibrace rotace
     export function calibRot()
     {
-        vanGogh.penDown();
-        vanGogh.fd(50);
-        vanGogh.penUp();
-        vanGogh.fd(50, false);
+        penDown();
+        fd(50);
+        penUp();
+        fd(50, false);
         PCAmotor.StepperStart(_left, false);
         PCAmotor.StepperStart(_right);
         basic.pause(5000);
         PCAmotor.MotorStopAll();
-        vanGogh.penDown();
-        vanGogh.fd(50);
-        vanGogh.penUp();
-        vanGogh.fd(50, false);
+        penDown();
+        fd(50);
+        penUp();
+        fd(50, false);
     }
 
     // Forward/Backward, dist v mm
@@ -100,5 +100,16 @@ namespace vanGogh {
         basic.pause(1600);
         PCAmotor.MotorStopAll();
         basic.pause(200);
+    }
+
+    export function rectangle(a: number, b: number): void
+    {
+        fd(a);
+        re(90);
+        fd(b);
+        re(90);
+        fd(a);
+        re(90);
+        fd(b);
     }
 }

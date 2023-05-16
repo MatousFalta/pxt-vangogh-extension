@@ -1,23 +1,13 @@
-
-
 input.onButtonPressed(Button.A, () => {
     vanGogh.penDown();
-    vanGogh.fd(50);
-    vanGogh.penUp();
-    vanGogh.fd(50, false);
-    vanGogh.re(180);
-    vanGogh.penDown();
-    vanGogh.fd(50);
-    vanGogh.penUp();
-    vanGogh.fd(50, false);
+    vanGogh.rectangle(100, 50);
 })
 
 input.onButtonPressed(Button.B, () => {
-    vanGogh.penUp();
+    vanGogh.fd(100);
 })
 
 input.onButtonPressed(Button.AB, function () {
-    PCAmotor.MotorStopAll()
-    basic.clearScreen()
+    PCAmotor.MotorStopAll();
+    basic.clearScreen();
 })
-
