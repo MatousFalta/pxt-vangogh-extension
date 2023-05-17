@@ -58,6 +58,15 @@ namespace vanGogh {
         PCAmotor.MotorStopAll();
     }
 
+    export function fdSpeed(dist: number, interval: number = 1, invert: boolean = true): void {
+        const delay = 1000 / interval;
+        for (let i = 0; i <= interval; i++) {
+            fd(dist / interval, invert);
+            PCAmotor.MotorStopAll();
+            basic.pause(delay);
+        }
+    }
+
     // Rotate, deg ve stupnich
     export function re(deg: number, invert: boolean = true): void {
         PCAmotor.StepperStart(_left, !invert);
@@ -104,12 +113,26 @@ namespace vanGogh {
 
     export function rectangle(a: number, b: number): void
     {
-        fd(a);
+        penDown();
+        for (let i = 0; i < 4; i++) {
+            fd(i % 2 == 0 ? a : b);
+            penDown();
+            penUp();
+            re(90);
+        }
+        penUp();
+    }
+
+    export function circle(d: number): void {
+        const circumference = Math.PI * d;
+        penUp();
+        fd(d / 2);
         re(90);
-        fd(b);
-        re(90);
-        fd(a);
-        re(90);
-        fd(b);
+        for (let i = 0; i < 60; i++) {
+            penDown();
+            fd(circumference / 60);
+            re(6);
+        }
+        penUp();
     }
 }

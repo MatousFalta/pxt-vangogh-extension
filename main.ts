@@ -1,6 +1,5 @@
 input.onButtonPressed(Button.A, () => {
-    vanGogh.penDown();
-    vanGogh.rectangle(100, 50);
+    vanGogh.circle(50);
 })
 
 input.onButtonPressed(Button.B, () => {
