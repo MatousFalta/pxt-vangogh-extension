@@ -1,21 +1,22 @@
+//% color="#CC7722" icon="/f1fc" block="Van Gogh" blockId="vanGogh"
 namespace vanGogh {
-    // inicializace serv
+    // initialization of servos
     const _pen = PCAmotor.Servos.S1;
     const _left = PCAmotor.Steppers.STPM1;
     const _right = PCAmotor.Steppers.STPM2;
-    // Jak moc se sníží pero nebo zvedne
+    // How much does the pen lower or raise
     const _minPenHeight = 1900;
     const _maxPenHeight = 1260;
-    //prumer kola v mm
-    const _d = 65;
-    //rychlost mm/ms
-    const _spd = 0.0213;
-    //rychlost deg/ms
-    const _degSpd = 0.01815;
+    //shift speed in mm/ms
+    const _spd = 0.0215;
+    //rotation speed deg/ms
+    const _degSpd = 0.0178;
 
-    // Kalibraci vzdy zacinejte az po Kalibraci vzdalenosti, jelikoz v ni pouzivam metody, ktere by bez kalibrace vzdalenosti nemuseli fungovat spravne
+    // Always start calibration with Distance Calibration then Rotation Calibration
 
-    // Kalibrace vzdalenosti
+    //% blockId=calibDist block="Calibrate distance"
+    //% weight=79
+    //% blockGap=50
     export function calibDist()
     {
         penUp();
@@ -33,24 +34,32 @@ namespace vanGogh {
         penUp();
     }
 
-    // Kalibrace rotace
+    //% blockId=calibRot block="Calibrate rotation"
+    //% weight=79
+    //% blockGap=50
     export function calibRot()
     {
         penDown();
         fd(50);
         penUp();
         fd(50, false);
+        penDown();
         PCAmotor.StepperStart(_left, false);
         PCAmotor.StepperStart(_right);
         basic.pause(5000);
         PCAmotor.MotorStopAll();
-        penDown();
         fd(50);
         penUp();
         fd(50, false);
     }
 
-    // Forward/Backward, dist v mm
+    /**
+     * Van Gogh move
+     * @param dist is distance of run in mm; eg: 10
+     * @param invert is direction forward or backward; eg: true
+    */
+    //% blockId=fd block="Van Gogh move |%dist| mm forward |%invert|"
+    //% weight=92
     export function fd(dist: number, invert: boolean = true): void {
         PCAmotor.StepperStart(_left, invert);
         PCAmotor.StepperStart(_right, invert);
@@ -58,71 +67,84 @@ namespace vanGogh {
         PCAmotor.MotorStopAll();
     }
 
-    export function fdSpeed(dist: number, interval: number = 1, invert: boolean = true): void {
-        const delay = 1000 / interval;
+    /**
+     * Van Gogh move with certain speed
+     * @param dist is distance of run in mm; eg: 10
+     * @param interval is indicates the frequency of stopping in ms; eg: 10
+     * @param invert is direction forward or backward; eg: true
+    */
+    //% blockId=fdSpeed block="Van Gogh move |%dist| mm forward |%invert| with stopping |%interval|"
+    //% weight=92
+    export function fdSpeed(dist: number, invert: boolean = true, interval: number = 1000): void {
         for (let i = 0; i <= interval; i++) {
             fd(dist / interval, invert);
             PCAmotor.MotorStopAll();
-            basic.pause(delay);
+            basic.pause(1);
         }
     }
 
-    // Rotate, deg ve stupnich
+    /**
+     * Van Gogh rotate
+     * @param deg is rotation in degrees; eg: 10
+     * @param invert is direction of rotation; eg: true
+    */
+    //% blockId=re block="Van Gogh rotate |%deg|° clockwise |%invert|"
+    //% weight=92
     export function re(deg: number, invert: boolean = true): void {
-        PCAmotor.StepperStart(_left, !invert);
-        PCAmotor.StepperStart(_right, invert);
+        PCAmotor.StepperStart(_left, invert);
+        PCAmotor.StepperStart(_right, !invert);
         basic.pause(calcDeg(deg));
         PCAmotor.MotorStopAll();
     }
 
-    // Vypocet vzdalenosti v mm na cas v ms
+    // Calculate distance to time with calibrated run speed
     function calcDist(t: number): number {
         return t/_spd;
     }
-
+    // VCalculate rotation to time with calibrated rotation speed
     function calcDeg(d: number): number {
         return d/_degSpd;
     }
 
-    // Zvednuti tuzky
+    //% blockId=penUp block="Raise pen"
+    //% weight=79
+    //% blockGap=50
     export function penUp(): void {
         PCAmotor.GeekServo(_pen, _maxPenHeight);
         basic.showArrow(ArrowNames.North);
     }
 
-    // Spusteni tuzky
+    //% blockId=penDown block="Launch pen"
+    //% weight=79
+    //% blockGap=50
     export function penDown(): void {
         PCAmotor.GeekServo(_pen, _minPenHeight);
         basic.showArrow(ArrowNames.South);
     }
 
-    export function leafPart(): void {
-        penDown();
-        fd(100);
-        penUp();
-        PCAmotor.StepperStart(_left, false);
-        PCAmotor.StepperStart(_right);
-        basic.pause(500);
-        PCAmotor.MotorStopAll();
-        PCAmotor.StepperStart(_left, false);
-        PCAmotor.StepperStart(_right, false);
-        basic.pause(1600);
-        PCAmotor.MotorStopAll();
-        basic.pause(200);
-    }
-
+    /**
+     * Van Gogh draw rectangle
+     * @param a is length of side A; eg: 10
+     * @param b is length of side B; eg: 10
+    */
+    //% blockId=rectangle block="Van Gogh draw rectangle of size |%a| mm side A and of size |%b| mm side B"
+    //% weight=92
     export function rectangle(a: number, b: number): void
     {
         penDown();
         for (let i = 0; i < 4; i++) {
-            fd(i % 2 == 0 ? a : b);
-            penDown();
-            penUp();
             re(90);
+            fd(i % 2 == 0 ? a : b);
         }
         penUp();
     }
 
+    /**
+     * Van Gogh draw circle
+     * @param d is diameter of circle; eg: 10
+    */
+    //% blockId=circle block="Van Gogh draw circle with diameter of |%d| mm"
+    //% weight=92
     export function circle(d: number): void {
         const circumference = Math.PI * d;
         penUp();
