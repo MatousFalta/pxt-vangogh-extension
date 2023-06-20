@@ -1,31 +1,9 @@
+<p><img src="https://github.com/pslib-cz/2022-p2a-mme-pppp-Pixelgon/blob/main/media/VanGogh.jpg"></p>
+<h1 align="center">VanGogh - Drive art, not just the direction!</h1>
+<p align="center">
+<a href="https://github.com/microbit-cz/pxt-vangogh-extension-library/blob/main/LICENSE"><img alt="GPL3 license" src="https://img.shields.io/badge/license-%20GPL3%20license-red"></a>
+<a href="https://github.com/microbit-cz/pxt-vangogh-extension-library/blob/main/README.md"><img alt="Cs readme" src="https://img.shields.io/badge/language-en-blue"></a>
+<a href="https://github.com/microbit-cz/pxt-vangogh-extension-library/blob/main/README.cs.md""><img alt="Cs readme" src="https://img.shields.io/badge/language-cs-red"></a>
+</p>
 
-> Open this page at [https://tomaskazda.github.io/pxt-pixelgon-example/](https://tomaskazda.github.io/pxt-pixelgon-example/)
-
-## Use as Extension
-
-This repository can be added as an **extension** in MakeCode.
-
-* open [https://makecode.microbit.org/](https://makecode.microbit.org/)
-* click on **New Project**
-* click on **Extensions** under the gearwheel menu
-* search for **https://github.com/tomaskazda/pxt-pixelgon-example** and import
-
-## Edit this project ![Build status badge](https://github.com/tomaskazda/pxt-pixelgon-example/workflows/MakeCode/badge.svg)
-
-To edit this repository in MakeCode.
-
-* open [https://makecode.microbit.org/](https://makecode.microbit.org/)
-* click on **Import** then click on **Import URL**
-* paste **https://github.com/tomaskazda/pxt-pixelgon-example** and click import
-
-## Blocks preview
-
-This image shows the blocks code from the last commit in master.
-This image may take a few minutes to refresh.
-
-![A rendered view of the blocks](https://github.com/tomaskazda/pxt-pixelgon-example/raw/master/.github/makecode/blocks.png)
-
-#### Metadata (used for search, rendering)
-
-* for PXT/microbit
-<script src="https://makecode.com/gh-pages-embed.js"></script><script>makeCodeRender("{{ site.makecode.home_url }}", "{{ site.github.owner_name }}/{{ site.github.repository_name }}");</script>
+<a href="https://github.com/pslib-cz/2022-p2a-mme-pppp-Pixelgon">VanGogh</a> is a vehicle that uses 3D printing technology, Microbit microcomputer, and lots of other components like servos and stepper motors. This is a library designed for VanGogh. It contains simple calibration methods, forward, forwardSpeed, rotate, penUp/Down, rectangle and circle. I recommend calibrating the servo before using it.
