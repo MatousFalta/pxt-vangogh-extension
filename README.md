@@ -1,5 +1,5 @@
 <p><img src="https://github.com/microbit-cz/Vangogh-painter/blob/main/media/VanGogh.jpg"></p>
-<h1 align="center">VanGogh - Drive art, not just the direction!</h1>
+<h1 align="center">VanGogh - Make art, not just ride.</h1>
 <p align="center">
 <a href="./LICENSE"><img alt="GPL3 license" src="https://img.shields.io/badge/license-%20GPL3%20license-red"></a>
 <a href="./README.md"><img alt="Cs readme" src="https://img.shields.io/badge/language-en-blue"></a>
