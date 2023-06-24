@@ -7,3 +7,5 @@
 </p>
 
 <a href="https://github.com/pslib-cz/2022-p2a-mme-pppp-Pixelgon">VanGogh</a> is a vehicle that uses 3D printing technology, Microbit microcomputer, and lots of other components like servos and stepper motors. This is a library designed for VanGogh. It contains simple calibration methods, forward, forwardSpeed, rotate, penUp/Down, rectangle and circle. Before use I recommend to calibrate the servo by changing the _minPenHeight and _maxPenHeight variables.
+
+<b>For functionality you need to use the <a href="https://github.com/TomasKazda/pxt-magicbit-pca9685" target="_blank">Motor:Bit extension.</a></b>
