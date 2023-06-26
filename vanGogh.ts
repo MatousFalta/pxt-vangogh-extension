@@ -17,8 +17,7 @@ namespace vanGogh {
     //% blockId=calibDist block="Calibrate distance"
     //% weight=79
     //% blockGap=50
-    export function calibDist()
-    {
+    export function calibDist() {
         penUp();
         basic.pause(500);
         PCAmotor.StepperStart(_left);
@@ -37,8 +36,7 @@ namespace vanGogh {
     //% blockId=calibRot block="Calibrate rotation"
     //% weight=79
     //% blockGap=50
-    export function calibRot()
-    {
+    export function calibRot() {
         penDown();
         fd(50);
         penUp();
@@ -99,11 +97,11 @@ namespace vanGogh {
 
     // Calculate distance to time with calibrated run speed
     function calcDist(t: number): number {
-        return t/_spd;
+        return t / _spd;
     }
     // VCalculate rotation to time with calibrated rotation speed
     function calcDeg(d: number): number {
-        return d/_degSpd;
+        return d / _degSpd;
     }
 
     //% blockId=penUp block="Raise pen"
@@ -129,8 +127,7 @@ namespace vanGogh {
     */
     //% blockId=rectangle block="Van Gogh draw rectangle of size |%a| mm side A and of size |%b| mm side B"
     //% weight=92
-    export function rectangle(a: number, b: number): void
-    {
+    export function rectangle(a: number, b: number): void {
         penDown();
         for (let i = 0; i < 4; i++) {
             re(90);
@@ -156,5 +153,28 @@ namespace vanGogh {
             re(6);
         }
         penUp();
+    }
+
+    /**
+     * Van Gogh draw Koch Snowflake
+     * @param n is number of iterations; eg: 3
+     * @param d is length of line segment in mm; eg: 10
+    */
+    //% blockId=KochFlake block="Van Gogh draw Koch Snowflake by |%n| iterations with a line segment length of |%d| mm"
+    //% weight=92
+    export function KochFlake(n: number, d: number): void {
+        if (n == 0) {
+            penDown();
+            vanGogh.fd(d);
+        }
+        else {
+            KochFlake(n - 1, d);
+            re(60, false);
+            KochFlake(n - 1, d);
+            re(120);
+            KochFlake(n - 1, d);
+            re(60, false);
+            KochFlake(n - 1, d);
+        }
     }
 }
