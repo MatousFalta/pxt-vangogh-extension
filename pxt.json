@@ -1,10 +1,8 @@
 {
-    "name": "pxt-pixelgon-example",
+    "name": "pxt-vangogh-extension",
     "description": "",
     "dependencies": {
         "core": "*",
-        "radio": "*",
-        "microphone": "*",
         "pxt-magicbit-pca9685": "github:tomaskazda/pxt-magicbit-pca9685#1e097c914b2c7ed1f4071d7b6288ef64812030e2"
     },
     "files": [
@@ -16,7 +14,7 @@
         "test.ts"
     ],
     "targetVersions": {
-        "target": "5.0.12",
+        "target": "6.0.8",
         "targetId": "microbit"
     },
     "supportedTargets": [
