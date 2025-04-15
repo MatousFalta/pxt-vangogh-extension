@@ -108,7 +108,7 @@ namespace vanGogh {
     //% weight=79
     //% blockGap=50
     export function penUp(): void {
-        PCAmotor.GeekServo(_pen, _minPenHeight);
+        PCAmotor.GeekServo(_pen, _maxPenHeight);
         basic.showArrow(ArrowNames.North);
     }
 
@@ -116,7 +116,7 @@ namespace vanGogh {
     //% weight=79
     //% blockGap=50
     export function penDown(): void {
-        PCAmotor.GeekServo(_pen, _maxPenHeight);
+        PCAmotor.GeekServo(_pen, _minPenHeight);
         basic.showArrow(ArrowNames.South);
     }
 
@@ -153,5 +153,28 @@ namespace vanGogh {
             re(6);
         }
         penUp();
+    }
+
+    /**
+     * Van Gogh draw Koch Snowflake
+     * @param n is number of iterations; eg: 3
+     * @param d is length of line segment in mm; eg: 10
+    */
+    //% blockId=KochFlake block="Van Gogh draw Koch Snowflake by |%n| iterations with a line segment length of |%d| mm"
+    //% weight=92
+    export function KochFlake(n: number, d: number): void {
+        if (n == 0) {
+            penDown();
+            vanGogh.fd(d);
+        }
+        else {
+            KochFlake(n - 1, d);
+            re(60, false);
+            KochFlake(n - 1, d);
+            re(120);
+            KochFlake(n - 1, d);
+            re(60, false);
+            KochFlake(n - 1, d);
+        }
     }
 }
