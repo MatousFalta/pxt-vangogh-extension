@@ -5,8 +5,8 @@ namespace vanGogh {
     const _left = PCAmotor.Steppers.STPM1;
     const _right = PCAmotor.Steppers.STPM2;
     // How much does the pen lower or raise
-    const _minPenHeight = 1900;
-    const _maxPenHeight = 1260;
+    const _minPenHeight = 1260;
+    const _maxPenHeight = 1900;
     //shift speed in mm/ms
     const _spd = 0.0215;
     //rotation speed deg/ms
