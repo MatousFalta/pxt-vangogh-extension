@@ -1,4 +1,4 @@
-//% color="#CC7722" icon="/f1fc" block="Van Gogh" blockId="vanGogh"
+//% color="#CC7722" icon="\uf1fc" block="Van Gogh" blockId="vanGogh"
 namespace vanGogh {
     // initialization of servos
     const _pen = PCAmotor.Servos.S1;
