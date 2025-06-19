@@ -8,9 +8,173 @@ namespace vanGogh {
     const _minPenHeight = 1260;
     const _maxPenHeight = 1900;
     //shift speed in mm/ms
-    const _spd = 0.0215;
+    let _spd = 0.0215;
     //rotation speed deg/ms
-    const _degSpd = 0.0178;
+    let _degSpd = 0.0178;
+    let on: boolean = false;
+    let measuringDistance: boolean = false;
+    let measuringDeg: boolean = false;
+    let measuringCSideLength: boolean = false;
+
+    enum degMenu {
+        begin,
+        makeCircle,
+        stopMakeCircle,
+        calibrateDeg
+    }
+    enum distanceMenu {
+        start,
+        departure,
+        stop,
+        measuring10cm
+    }
+
+    let currentDegCalibration: degMenu = degMenu.begin;
+    let current: distanceMenu = distanceMenu.start;
+    let startTime: number;
+    let endTime: number;
+    let time10cm: number;
+    let deaviation: number = 0;
+    let circleTime: number = 0;
+    let cSideLength: number = 0;
+
+    function testAnalogInput() {
+        let value = pins.analogReadPin(AnalogPin.P2)
+        console.log(value)
+        basic.pause(500)
+    }
+
+    basic.forever(function () {
+        testAnalogInput()
+    })
+/*    basic.forever(function () {
+        if (pins.digitalReadPin(DigitalPin.P2) == 0) {
+            console.log(i);  // černá detekována
+            i++;
+        } else {
+            console.log(i);  // světlé pozadí
+            i--;
+        }
+        basic.pause(50);
+    })*/
+    basic.showString("press B");
+    input.onButtonPressed(Button.AB, () => {
+        if (!measuringDistance && !measuringCSideLength) {
+            basic.clearScreen();
+            escapingPredator();
+        }
+        else if (measuringDistance) {
+            calculateRealDistance(deaviation);
+        }
+        else if (measuringCSideLength){
+            calculateRealCircleLength(cSideLength);
+        }
+    })
+
+    input.onButtonPressed(Button.A, () => {
+        if (!measuringDistance && !measuringDeg) {
+            current--;
+            speedCalibration();
+        }
+
+        if (measuringDistance) {
+            deaviation--;
+            deaviationLimiter(deaviation);
+        }
+        if (measuringDeg && !measuringCSideLength) {
+            currentDegCalibration--;
+            degSpeedCalibration();
+        }
+        if (measuringCSideLength) {
+            cSideLength--;
+            cSideLengthLimiter(cSideLength);
+        }
+    });
+
+    input.onButtonPressed(Button.B, () => {
+        if (!measuringDistance && !measuringDeg) {
+            current++;
+            speedCalibration();
+        }
+        if (measuringDistance) {
+            deaviation++
+            deaviationLimiter(deaviation);
+        }
+        if (measuringDeg && !measuringCSideLength) {
+            currentDegCalibration++;
+            degSpeedCalibration();
+        }
+        if (measuringCSideLength) {
+            cSideLength++;
+            cSideLengthLimiter(cSideLength);
+        }
+    });
+    function speedCalibration() {
+        switch (current) {
+            case distanceMenu.start:
+                PCAmotor.MotorStopAll();
+                basic.showString("A", 0);
+                break;
+            case distanceMenu.departure:
+                startTime = control.millis();
+                moveForward();
+                basic.showString("B", 0);
+                break;
+            case distanceMenu.stop:
+                PCAmotor.MotorStopAll();
+                endTime = control.millis();
+                endTime = endTime - startTime;
+                time10cm = endTime / 2;
+                basic.showString("C", 0);
+                break;
+            case distanceMenu.measuring10cm:
+                basic.showString("D", 0);
+                moveForward();
+                basic.pause(time10cm);
+                PCAmotor.MotorStopAll();
+                measuringDistance = true;
+                deaviationLimiter(deaviation);
+                break;
+        }
+    }
+
+    function degSpeedCalibration() {
+        switch (currentDegCalibration) {
+            case degMenu.begin:
+                PCAmotor.MotorStopAll();
+                basic.showString("1", 0);
+                break;
+            case degMenu.makeCircle:
+                basic.showString("2", 0);
+                penDown();
+                moveForward();
+                basic.pause(time10cm);
+                PCAmotor.MotorStopAll();
+                penUp();
+                moveBackward();
+                basic.pause(time10cm);
+                PCAmotor.MotorStopAll();
+                basic.pause(100);
+                startTime = control.millis();
+                turnRight();
+                break;
+            case degMenu.stopMakeCircle:
+                basic.showString("3", 0);
+                endTime = control.millis();
+                PCAmotor.MotorStopAll();
+                penDown();
+                moveForward();
+                basic.pause(time10cm);
+                PCAmotor.MotorStopAll();
+                penUp();
+                moveBackward();
+                basic.pause(time10cm);
+                PCAmotor.MotorStopAll();
+                measuringCSideLength = true;
+                whaleysans.showNumber(cSideLength);
+                break;
+        }
+    }
 
     // Always start calibration with Distance Calibration then Rotation Calibration
 
@@ -104,6 +268,99 @@ namespace vanGogh {
         return d / _degSpd;
     }
 
+    function deaviationLimiter(b: number): void {
+        if (b < -100) {
+            b = -100;
+        }
+        else if (b > 100) {
+            b = 100;
+        }
+        deaviation = b;
+        if (deaviation < 0) {
+            basic.showNumber(deaviation);
+        }
+        else {
+            whaleysans.showNumber(deaviation);
+        }
+    }
+
+    function cSideLengthLimiter(b: number): void {
+        if (b < -100) {
+            b = -100;
+        }
+        else if (b > 100) {
+            b = 100;
+        }
+        cSideLength = b;
+        if (cSideLength < 0) {
+            basic.showNumber(cSideLength);
+        }
+        else {
+            whaleysans.showNumber(cSideLength);
+        }
+    }
+
+    function calculateRealDistance(i: number): void {
+        let ratio: number;
+        let totalDistance: number;
+
+        measuringDistance = false;
+        totalDistance = 100 + i;
+        ratio = totalDistance / 100;
+        time10cm = time10cm / ratio;
+        _spd = 100 / time10cm;
+        console.log(_spd);
+        basic.clearScreen();
+        measuringDeg = true;
+    }
+
+    function calculateRealCircleLength(c: number){
+        let ratio: number;
+        let realDeg: number;
+        let rad: number;
+        let deg: number;
+
+        circleTime = endTime - startTime;
+        rad = 2 * Math.asin(c/20)
+        deg = rad * 180 / Math.PI;
+        realDeg = 360 + deg;
+        ratio = realDeg / 360;
+        circleTime = circleTime / ratio;
+        _degSpd = 360 / circleTime;
+        console.log(_degSpd);
+        basic.showNumber(_degSpd);
+    }
+
+    export function escapingPredator(): void {
+        if (!on) {
+            moveForward();
+            on = true;
+        }
+        else {
+            PCAmotor.MotorStopAll();
+            on = false;
+        }
+    }
+
+    export function moveForward(): void {
+        PCAmotor.StepperStart(_left, false);
+        PCAmotor.StepperStart(_right, false);
+    }
+
+    export function moveBackward(): void {
+        PCAmotor.StepperStart(_left, true);
+        PCAmotor.StepperStart(_right, true);
+    }
+
+    export function turnLeft(): void {
+        PCAmotor.StepperStart(_left, true);
+        PCAmotor.StepperStart(_right, false);
+    }
+
+    export function turnRight(): void {
+        PCAmotor.StepperStart(_left, false);
+        PCAmotor.StepperStart(_right, true);
+    }
     //% blockId=penUp block="Raise pen"
     //% weight=79
     //% blockGap=50
