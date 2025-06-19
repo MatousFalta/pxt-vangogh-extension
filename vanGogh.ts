@@ -137,7 +137,7 @@ namespace vanGogh {
                 break;
         }
     }
-
+//asd
     function degSpeedCalibration() {
         switch (currentDegCalibration) {
             case degMenu.begin:
